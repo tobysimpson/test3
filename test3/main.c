@@ -74,11 +74,12 @@ int main(int argc, const char * argv[])
         for(int j=0; j<4; j++)
         {
             uu[k].arr[j] = 4*k+j;
-            bb[k].arr[j] = 4*k+j;
+            bb[k].arr[j] = 0e0f;
             
             for(int i=0; i<4; i++)
             {
-                vv[k].arr[j][i] = 4*j+i;
+                vv[k].arr[j][i] = 4*i+j;    //col maj
+                vv[k].arr[j][i] = 2*(i==j);    //col maj
             }
         }
     }
@@ -92,8 +93,6 @@ int main(int argc, const char * argv[])
     wrt_raw(jj, 4, sizeof(int),         "A_jj");
     wrt_raw(vv, 4, sizeof(cl_float16),  "A_vv");
     
-
-    
     SparseAttributes_t atts;
     atts.kind = SparseOrdinary;
     
@@ -104,10 +103,19 @@ int main(int argc, const char * argv[])
     
     SparseMatrix_Float A = SparseConvertFromCoordinate(n, n, blk_num, blk_sz, atts, ii, jj, (float*)vv);  //duplicates sum
     
+    
     SparseMultiply(A,u,b);
-//    SparseSolve(SparseGMRES(), A, b, u);
+    
+    memset(uu,0, 4*sizeof(cl_float4));
+    
+    SparseSolve(SparseGMRES(), A, b, u);
     SparseCleanup(A);
 
+    //write vec
+    wrt_raw(uu, 4, sizeof(cl_float4),  "uu");
+    wrt_raw(bb, 4, sizeof(cl_float4),  "bb");
+    
+    
     printf("done\n");
     
     return 0;
