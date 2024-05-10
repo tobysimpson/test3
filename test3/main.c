@@ -14,7 +14,7 @@
 
 #define ROOT_WRITE  "/Users/toby/Downloads/"
 
-union float4
+union flt4
 {
     cl_float4  vec;
     float      arr[4];
@@ -22,7 +22,7 @@ union float4
 };
 
 
-union float4x4
+union flt4x4
 {
     cl_float16  vec;
     float       arr[4][4];
@@ -50,14 +50,15 @@ void wrt_raw(void *ptr, size_t n, size_t bytes, char *file_name)
     return;
 }
 
+
 //sparse assemble then write to blas then change row data
 int main(int argc, const char * argv[])
 {
     printf("hello\n");
     
     //vec
-    union float4 uu[4];
-    union float4 bb[4];
+    union flt4 uu[4];
+    union flt4 bb[4];
     
     DenseVector_Float u = {16, (float*)uu};
     DenseVector_Float b = {16, (float*)bb};
@@ -65,7 +66,7 @@ int main(int argc, const char * argv[])
     //coo
     int             ii[4] = {0,1,2,3};
     int             jj[4] = {0,1,2,3};
-    union float4x4  vv[4];
+    union flt4x4  vv[4];
 
     
     //init
